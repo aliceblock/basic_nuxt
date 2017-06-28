@@ -1,59 +1,82 @@
 <template>
-  <section class="container">
-    <div>
-      <logo/>
-      <h1 class="title">
-        NUXT
-      </h1>
-      <h2 class="subtitle">
-        Universal Vue.js Application
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
-      </div>
-    </div>
-  </section>
+  <div class="container">
+    <h1>Show message data: {{ message }}</h1>
+    <hr>
+    <h2>Two-way data binding</h2>
+    <!--<p v-bind:title="text_input">{{ text_input }}</p>-->
+    <p :title="text_input">{{ text_input }}</p>
+    <input type="text" v-model="text_input">
+    <hr>
+    <h2>For loop</h2>
+    <ul>
+      <li v-for="user in users">Name - {{ user.name }}, Age - {{ user.age }}</li>
+    </ul>
+    <hr>
+    <h2>Event binding</h2>
+    <p>{{ message }}</p>
+    <!--<button v-on:click="reverseMessage">Reverse Message</button>-->
+    <button @click="reverseMessage">Reverse Message</button>
+    <hr>
+    <h2>Mounted value</h2>
+    <ul>
+      <li v-for="food in loaded_values">{{ food.name }} ({{ food.price }} Baht)</li>
+    </ul>
+    <hr>
+    <nuxt-link to="/components">Components</nuxt-link>
+    <button type="button" @click="goToComponent">Components</button>
+  </div>
 </template>
 
 <script>
-import Logo from '~components/Logo.vue'
+import axios from 'axios'
 
 export default {
-  components: {
-    Logo
+  // data: function() {
+  //   return {
+  //     message: 'Hello Vue!!'
+  //   }
+  // }
+  // data () {
+  //   return {
+  //     message: 'Hello Vue!!'
+  //   }
+  // }
+  data: () => ({
+    message: 'Hello Vue!!',
+    text_input: 'Enter your text here!!',
+    users: [
+      {name: 'A', age: '15'},
+      {name: 'B', age: '16'},
+      {name: 'C', age: '15'},
+      {name: 'D', age: '16'},
+      {name: 'E', age: '18'}
+    ],
+    loaded_values: []
+  }),
+  methods: {
+    reverseMessage () {
+      this.message = this.message.split('').reverse().join('')
+    },
+    goToComponent () {
+      this.$router.push('/components')
+    }
+  },
+  mounted () {
+    // Maybe uses AJAX here and assigns values
+    axios.get('https://nuxt-da01e.firebaseio.com/food.json')
+      .then((response) => {
+        console.log(response)
+        this.loaded_values = response.data
+      })
   }
 }
 </script>
 
 <style>
-.container
-{
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.container {
+  padding: 20px;
 }
-.title
-{
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-.subtitle
-{
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-.links
-{
-  padding-top: 15px;
+hr {
+  margin: 30px;
 }
 </style>
