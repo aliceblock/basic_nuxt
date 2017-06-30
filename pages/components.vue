@@ -11,7 +11,8 @@
     {{ parent_num }}
     <Numpad2 :value.sync="parent_num"></Numpad2>
     <hr>
-    <nuxt-link to="/">Index</nuxt-link>
+    <nuxt-link to="/">[Index]</nuxt-link>
+    <nuxt-link to="/vuex">[Vuex]</nuxt-link>
   </div>
 </template>
 
